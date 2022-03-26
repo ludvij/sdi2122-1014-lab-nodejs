@@ -16,11 +16,20 @@ module.exports = (app) => {
     })
     app.get('/songs/:id', (req, res) => {
         let response = 'id: ' + req.params.id
+
         res.send(response)
     })
     app.get('/songs/:kind/:id', (req, res) => {
         let response = 'id: ' + req.params.id + '<br>'
             + 'Tipo de música: ' + req.params.kind
+
+        res.send(response)
+    })
+    app.post('/songs/add', (req, res) => {
+        let response = "Canción agregada: " + req.body.title + "<br>"
+        + " genero: " + req.body.kind + "<br>"
+        + " precio: " + req.body.price
+
         res.send(response)
     })
 }
