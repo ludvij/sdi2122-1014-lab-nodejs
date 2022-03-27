@@ -11,6 +11,8 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
 
+// mongodb+srv://admin:elAdminDelMongo@tiendamusica.og0dc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 require("./routes/songs.js")(app)
