@@ -1,10 +1,10 @@
 module.exports = (app) => {
     app.get('/authors/add', (req, res) => {
-        let kinds = ['Cantante', 'batería', 'guitarrista', 'teclista', 'bajista']
+        let kinds = ['cantante', 'batería', 'guitarrista', 'teclista', 'bajista']
         let response = {
             kinds: kinds
         }
-        res.render("authors/add.twig", response);
+        res.render('authors/add.twig', response);
     })
     app.post('/authors/add', (req, res) => {
         let response = ''
@@ -25,22 +25,58 @@ module.exports = (app) => {
     })
     app.get('/authors', (req, res) => {
         let authors = [{
-            "name": "test name",
-            "group": "test group",
-            'kind': 'singer'
+            'name': 'test name',
+            'group': 'test group',
+            'kind': 'cantante'
         },{
-            "name": "test name",
-            "group": "test group",
-            'kind': 'singer'
+            'name': 'test name',
+            'group': 'test group',
+            'kind': 'batería'
         }, {
-            "name": "test name",
-            "group": "test group",
-            'kind': 'singer'
+            'name': 'test name',
+            'group': 'test group',
+            'kind': 'guitarrista'
+        },{
+            'name': 'test name',
+            'group': 'test group',
+            'kind': 'bajista'
+        },{
+            'name': 'test name',
+            'group': 'test group',
+            'kind': 'teclista'
         }]
         let response = {
             authors: authors
         }
-        res.render("authors/authors.twig", response)
+        res.render('authors/authors.twig', response)
+    })
+    app.get('/authors/filter/:filter', (req, res) => {
+        let authors = [{
+            'name': 'test name',
+            'group': 'test group',
+            'kind': 'cantante'
+        },{
+            'name': 'test name',
+            'group': 'test group',
+            'kind': 'batería'
+        }, {
+            'name': 'test name',
+            'group': 'test group',
+            'kind': 'guitarrista'
+        },{
+            'name': 'test name',
+            'group': 'test group',
+            'kind': 'bajista'
+        },{
+            'name': 'test name',
+            'group': 'test group',
+            'kind': 'teclista'
+        }]
+
+        let response = {
+            authors: authors.filter(x => x.kind === req.params.filter)
+        }
+        res.render('authors/authors.twig', response)
     })
     app.get('/authors/*', (req, res) => {
         res.redirect('/authors')
