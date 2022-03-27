@@ -1,6 +1,10 @@
 module.exports = (app) => {
     app.get('/authors/add', (req, res) => {
-        res.render("authors/add.twig");
+        let kinds = ['Cantante', 'batería', 'guitarrista', 'teclista', 'bajista']
+        let response = {
+            kinds: kinds
+        }
+        res.render("authors/add.twig", response);
     })
     app.post('/authors/add', (req, res) => {
         let response = ''
@@ -34,7 +38,6 @@ module.exports = (app) => {
             'kind': 'singer'
         }]
         let response = {
-            seller: "Autores",
             authors: authors
         }
         res.render("authors/authors.twig", response)

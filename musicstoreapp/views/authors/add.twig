@@ -20,11 +20,9 @@
             <label class="control-label col-sm-2" for="kind">Rol:</label>
             <div class="col-sm-10">
                 <select class="form-control" id="kind" name="kind" required>
-                    <option value="singer">Cantante</option>
-                    <option value="drummer">Batería</option>
-                    <option value="guitar-player">Guitarrista</option>
-                    <option value="bass-player">Bajista</option>
-                    <option value="keyboard-player">Teclista</option>
+                    {% for kind in kinds %}
+                    <option value="{{ kind }}">{{ kind }}</option>
+                    {% endfor %}
                 </select>
             </div>
         </div>
