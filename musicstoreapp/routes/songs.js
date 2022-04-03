@@ -54,10 +54,15 @@ module.exports = (app, songsRepository) => {
         res.send(response)
     })
     app.post('/songs/add', (req, res) => {
+        if (req.session.user == null) {
+            res.redirect('/shop')
+            return;
+        }
         let song = {
             title: req.body.title,
             kind: req.body.kind,
-            price: req.body.price
+            price: req.body.price,
+            author: req.session.user
         }
         songsRepository.insertSong(song, (songId) => {
             if (songId == null) {
