@@ -4,18 +4,20 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser')
 const logger = require('morgan');
+const {MongoClient} = require('mongodb')
 
 const app = express();
-
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
-
-// mongodb+srv://admin:elAdminDelMongo@tiendamusica.og0dc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
-
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-require("./routes/songs.js")(app)
+
+
+const url = 'mongodb+srv://admin:elAdminDelMongo@tiendamusica.og0dc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+app.set('connectionString', url)
+
+require("./routes/songs.js")(app, MongoClient)
 require("./routes/authors.js")(app)
 
 // view engine setup

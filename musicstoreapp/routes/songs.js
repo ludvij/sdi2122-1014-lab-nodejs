@@ -1,5 +1,5 @@
 
-module.exports = (app) => {
+module.exports = (app, MongoClient) => {
     app.get("/songs", (req, res) => {
         let songs = [{
             "title": "Blank space",
@@ -37,11 +37,24 @@ module.exports = (app) => {
         res.send(response)
     })
     app.post('/songs/add', (req, res) => {
-        let response = "Canción agregada: " + req.body.title + "<br>"
-        + " genero: " + req.body.kind + "<br>"
-        + " precio: " + req.body.price
-
-        res.send(response)
+        let song = {
+            title: req.body.title,
+            kind: req.body.kind,
+            price: req.body.price
+        }
+        MongoClient.connect(app.get('connectionStrings'), (err, dbClient) => {
+            if (err) {
+                res.send("Error de conexión: " + err);
+            } else {
+                const database = dbClient.db("musicStore");
+                const collectionName = 'songs';
+                const songsCollection = database.collection(collectionName);
+                songsCollection.insertOne(song)
+                    .then(result => res.send("canción añadida id: " + result.insertedId))
+                    .then(() => dbClient.close())
+                    .catch(err => res.send("Error al insertar " + err));
+            }
+        })
     })
 }
 
