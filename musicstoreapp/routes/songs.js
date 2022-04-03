@@ -42,7 +42,7 @@ module.exports = (app, MongoClient) => {
             kind: req.body.kind,
             price: req.body.price
         }
-        MongoClient.connect(app.get('connectionStrings'), (err, dbClient) => {
+        MongoClient.connect(app.get('connectionString'), (err, dbClient) => {
             if (err) {
                 res.send("Error de conexión: " + err);
             } else {
