@@ -15,9 +15,10 @@ const usersRouter = require('./routes/users');
 
 
 const url = 'mongodb+srv://admin:elAdminDelMongo@tiendamusica.og0dc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
-app.set('connectionString', url)
-
-require("./routes/songs.js")(app, MongoClient)
+app.set('connectionStrings', url)
+let songsRepository = require("./repositories/songsRepository.js");
+songsRepository.init(app, MongoClient);
+require("./routes/songs.js")(app, songsRepository)
 require("./routes/authors.js")(app)
 
 // view engine setup
