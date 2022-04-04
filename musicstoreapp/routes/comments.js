@@ -15,16 +15,22 @@ module.exports = (app, commentsRepository) => {
                 res.send('Se ha producido un error al añadir el comentario: ' + error)
             })
     })
-    app.post('/comments/delete/:id', (req, res) => {
-        if (req.body.author !== req.session.user) {
-            res.send('Solo se pueden borrar comentarios propios')
-        } else {
-            commentsRepository.deleteCommentById(ObjectId(req.params.id))
-                .then(() => {
-                    res.redirect('back')
-                }).catch(error => {
-                    res.send('Se ha producido un error al eliminar el comentario: ' + error)
-                })
-        }
+    app.get('/comments/delete/:id', (req, res) => {
+        commentsRepository.findComment({_id: ObjectId(req.params.id)}, {})
+            .then(response => {
+                if (response.author !== req.session.user) {
+                    res.send('Solo se puede borrar un comentario propio')
+                }
+                else {
+                    commentsRepository.deleteComment(response)
+                        .then(() => {
+                            res.redirect('back')
+                        }).catch(error => {
+                            res.send('Se ha producido un error al eliminar el comentario: ' + error)
+                        })
+                }
+            }).catch(error => {
+                res.send('Se ha producido un error al buscar el comentario: ' + error)
+            })
     })
 }

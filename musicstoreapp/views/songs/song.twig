@@ -26,8 +26,8 @@
                             {{ comment.text }}
                         </div>
                         <div class="col-sm-2">
-                            <form action="/comments/delete/{{ comment._id }}" method="post">
-                                <button name="author" value="{{ comment.author }}" class="btn btn-primary pull-right">Borrar</button>
+                            <form action="/comments/delete/{{ comment._id }}">
+                                <button class="btn btn-primary pull-right">Borrar</button>
                             </form>
                         </div>
                     </div>
