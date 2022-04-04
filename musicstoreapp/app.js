@@ -47,7 +47,9 @@ app.use('/songs/edit',userSessionRouter);
 app.use('/publications',userSessionRouter);
 app.use('/audios/',userAudiosRouter);
 app.use('/shop/',userSessionRouter);
-app.use('/comments/:id', userSessionRouter);
+app.use('/comments/', userSessionRouter);
+app.use('/favorites', userSessionRouter)
+app.use('/favorites/**', userSessionRouter)
 
 songsRepository.init(app, MongoClient);
 usersRepository.init(app, MongoClient);
@@ -55,6 +57,7 @@ commentsRepository.init(app, MongoClient)
 
 require('./routes/songs.js')(app, songsRepository, commentsRepository)
 require('./routes/comments.js')(app, commentsRepository)
+require('./routes/favorites')(app, songsRepository)
 require('./routes/users.js')(app, usersRepository);
 require('./routes/authors.js')(app)
 
