@@ -3,7 +3,7 @@ module.exports = function (app, usersRepository) {
 		res.send('lista de usuarios');
 	})
 	app.get('/users/signup', function (req, res) {
-		res.render('signup.twig');
+		res.render('signup.twig')
 	})
 	app.get('/users/login', function (req, res) {
 		res.render('login.twig');
@@ -27,7 +27,7 @@ module.exports = function (app, usersRepository) {
 					res.send('Usuario no encontrado')
 				} else {
 					req.session.user = user.email
-					res.send('Usuario identificado correctamente: ' + user.email)
+					res.redirect('/publications')
 				}
 			}).catch(error => {
 				req.session.user = null
@@ -42,7 +42,7 @@ module.exports = function (app, usersRepository) {
 			password: securePassword
 		}
 		usersRepository.insertUser(user).then(userId => {
-			res.send('Usuario registrado ' + userId);
+			res.redirect('/users/login')
 		}).catch(error => {
 			res.send('Error al insertar el usuario');
 		});

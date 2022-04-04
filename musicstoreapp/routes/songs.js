@@ -99,17 +99,17 @@ module.exports = (app, songsRepository, commentsRepository) => {
             } else {
                 if (req.files != null) {
                     let imagen = req.files.cover;
-                    imagen.mv(app.get('uploadPath') + '/public/covers/' + songId + '.png', function (err) {
+                    imagen.mv(app.get('uploadPath')+'/public/covers/'+songId+'.png', (err) => {
                         if (err) {
                             res.send('Error al subir la portada de la canción')
                         } else {
                             if (req.files.audio != null) {
                                 let audio = req.files.audio;
-                                audio.mv(app.get('uploadPath') + '/public/audios/' + songId + '.mp3', function (err) {
+                                audio.mv(app.get('uploadPath')+'/public/audios/'+songId+'.mp3', (err) => {
                                     if (err) {
                                         res.send('Error al subir el audio');
                                     } else {
-                                        res.send('Agregada la canción ID: ' + songId);
+                                        res.redirect('/publications')
                                     }
                                 });
                             }
@@ -147,7 +147,7 @@ module.exports = (app, songsRepository, commentsRepository) => {
                 if (result == null) {
                     res.send('Error al actualizar la portada o el audio de la canción');
                 } else {
-                    res.send('Se ha modificado el registro correctamente');
+                    res.redirect('/publications')
                 }
             });
         }).catch(error => {
