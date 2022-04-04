@@ -13,8 +13,8 @@ const indexRouter = require('./routes/index');
 const userSessionRouter = require('./routes/userSessionRouter')
 const userAudiosRouter = require('./routes/userAudiosRouter')
 
-let songsRepository = require("./repositories/songsRepository.js");
-let usersRepository = require("./repositories/usersRepository.js");
+let songsRepository = require('./repositories/songsRepository.js');
+let usersRepository = require('./repositories/usersRepository.js');
 let commentsRepository = require('./repositories/commentsRepository.js')
 
 const app = express();
@@ -42,11 +42,11 @@ app.use('/', indexRouter);
 const url = 'mongodb+srv://admin:elAdminDelMongo@tiendamusica.og0dc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 app.set('connectionStrings', url)
 
-app.use("/songs/add",userSessionRouter);
-app.use("/songs/edit",userSessionRouter);
-app.use("/publications",userSessionRouter);
-app.use("/audios/",userAudiosRouter);
-app.use("/shop/",userSessionRouter);
+app.use('/songs/add',userSessionRouter);
+app.use('/songs/edit',userSessionRouter);
+app.use('/publications',userSessionRouter);
+app.use('/audios/',userAudiosRouter);
+app.use('/shop/',userSessionRouter);
 app.use('/comments/:id', userSessionRouter);
 
 songsRepository.init(app, MongoClient);

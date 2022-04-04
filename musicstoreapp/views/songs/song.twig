@@ -21,9 +21,16 @@
             <div class="media col-xs-10">
                 <div class="media-body">
                     <h4 class="media-heading">{{ comment.author }}</h4>
-                    <p>
-                        {{ comment.text }}
-                    </p>
+                    <div class="row">
+                        <div class="col-sm-10">
+                            {{ comment.text }}
+                        </div>
+                        <div class="col-sm-2">
+                            <form action="/comments/delete/{{ comment._id }}" method="post">
+                                <button name="author" value="{{ comment.author }}" class="btn btn-primary pull-right">Borrar</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         {% endfor %}

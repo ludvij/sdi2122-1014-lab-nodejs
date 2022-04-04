@@ -3,14 +3,14 @@ module.exports = function (app, usersRepository) {
 		res.send('lista de usuarios');
 	})
 	app.get('/users/signup', function (req, res) {
-		res.render("signup.twig");
+		res.render('signup.twig');
 	})
 	app.get('/users/login', function (req, res) {
-		res.render("login.twig");
+		res.render('login.twig');
 	})
 	app.get('/users/logout', function (req, res) {
 		req.session.user = null;
-		res.send("El usuario se ha desconectado correctamente");
+		res.send('El usuario se ha desconectado correctamente');
 	})
 	app.post('/users/login', (req, res) => {
 		let securePassword = app.get('crypto').createHmac('sha256', app.get('clave'))
@@ -31,11 +31,11 @@ module.exports = function (app, usersRepository) {
 				}
 			}).catch(error => {
 				req.session.user = null
-				res.send("Se ha producido un error al buscar el usuario: " + error)
+				res.send('Se ha producido un error al buscar el usuario: ' + error)
 			})
 	})
 	app.post('/users/signup', function (req, res) {
-		let securePassword = app.get("crypto").createHmac('sha256', app.get('clave'))
+		let securePassword = app.get('crypto').createHmac('sha256', app.get('clave'))
 			.update(req.body.password).digest('hex');
 		let user = {
 			email: req.body.email,
@@ -44,7 +44,7 @@ module.exports = function (app, usersRepository) {
 		usersRepository.insertUser(user).then(userId => {
 			res.send('Usuario registrado ' + userId);
 		}).catch(error => {
-			res.send("Error al insertar el usuario");
+			res.send('Error al insertar el usuario');
 		});
 	});
 }
