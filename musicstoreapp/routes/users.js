@@ -16,6 +16,7 @@ module.exports = function (app, usersRepository) {
 		let securePassword = app.get('crypto').createHmac('sha256', app.get('clave'))
 			.update(req.body.password).digest('hex')
 		let filter = {
+
 			email: req.body.email,
 			password: securePassword
 		}
