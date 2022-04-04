@@ -26,6 +26,6 @@ module.exports = (app, songsRepository) => {
         let favs = req.session.favorites
         let index = favs.map(x => x.song_id).indexOf(req.params.song_id)
         favs.splice(index,1)
-        console.log(req.session.favorites)
+        res.redirect('back')
     })
 }
