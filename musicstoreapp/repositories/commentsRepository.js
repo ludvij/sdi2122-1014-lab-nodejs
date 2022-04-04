@@ -42,28 +42,27 @@ module.exports = {
             throw (error)
         }
     },
-    deleteComment: async (comment) => {
+    deleteComment: async (filter, options) => {
         try {
             const client = await this.mongoClient.connect(this.app.get('connectionStrings'))
             const database = client.db("musicStore")
             const collectionName = 'comments'
             const commentsCollection = database.collection(collectionName)
-            const result = await commentsCollection.deleteOne(comment)
-            // if deleted acknowledged is true
-            return result.acknowledged
+            const result = await commentsCollection.deleteOne(filter, options)
+            return result
         } catch (error) {
             throw error
         }
     },
-    deleteCommentById: async (id) => {
+    deleteComments: async (filter, options) => {
         try {
             const client = await this.mongoClient.connect(this.app.get('connectionStrings'))
             const database = client.db("musicStore")
             const collectionName = 'comments'
             const commentsCollection = database.collection(collectionName)
-            const result = await commentsCollection.deleteOne({_id: id})
+            const result = await commentsCollection.deleteMany(filter, options)
             // if deleted acknowledged is true
-            return result.acknowledged
+            return result
         } catch (error) {
             throw error
         }

@@ -38,6 +38,24 @@ module.exports = (app, songsRepository, commentsRepository) => {
     app.get('/songs/add', (req, res) => {
         res.render('songs/add.twig');
     })
+    app.get('/songs/delete/:id', function (req, res) {
+        let filter = {_id: ObjectId(req.params.id)};
+        commentsRepository.deleteComments({song_id: ObjectId(req.params.id)}, {})
+            .then(r =>{
+
+            }).catch(error => {
+                res.send('Se ha producido un error al eliminar la canción: ' + error)
+        })
+        songsRepository.deleteSong(filter, {}).then(result => {
+            if (result == null || result.deletedCount == 0) {
+                res.send("No se ha podido eliminar el registro");
+            } else {
+                res.redirect("/publications");
+            }
+        }).catch(error => {
+            res.send("Se ha producido un error al intentar eliminar la canción: " + error)
+        });
+    })
     app.get('/songs/:id', (req, res) => {
         let filter = {_id: ObjectId(req.params.id)};
         let options = {};

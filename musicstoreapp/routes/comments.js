@@ -16,13 +16,13 @@ module.exports = (app, commentsRepository) => {
             })
     })
     app.get('/comments/delete/:id', (req, res) => {
-        commentsRepository.findComment({_id: ObjectId(req.params.id)}, {})
+        commentsRepository.findComment({_id: ObjectId(req.params.id)}, {author: 1})
             .then(response => {
                 if (response.author !== req.session.user) {
                     res.send('Solo se puede borrar un comentario propio')
                 }
                 else {
-                    commentsRepository.deleteComment(response)
+                    commentsRepository.deleteComment({_id: ObjectId(req.params.id)}, {})
                         .then(() => {
                             res.redirect('back')
                         }).catch(error => {

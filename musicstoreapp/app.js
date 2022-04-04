@@ -50,6 +50,9 @@ app.use('/shop/',userSessionRouter);
 app.use('/comments/', userSessionRouter);
 app.use('/favorites', userSessionRouter)
 app.use('/favorites/**', userSessionRouter)
+const userAuthorRouter = require('./routes/userAuthorRouter');
+app.use("/songs/edit",userAuthorRouter);
+app.use("/songs/delete",userAuthorRouter);
 
 songsRepository.init(app, MongoClient);
 usersRepository.init(app, MongoClient);
