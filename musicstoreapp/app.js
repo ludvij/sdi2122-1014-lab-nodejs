@@ -10,6 +10,8 @@ const fileUpload = require('express-fileupload')
 const expressSession = require('express-session')
 
 const indexRouter = require('./routes/index');
+const userSessionRouter = require('./routes/userSessionRouter')
+const userAudiosRouter = require('./routes/userAudiosRouter')
 
 const app = express();
 
@@ -35,6 +37,11 @@ app.use('/', indexRouter);
 
 const url = 'mongodb+srv://admin:elAdminDelMongo@tiendamusica.og0dc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 app.set('connectionStrings', url)
+
+app.use("/songs/add",userSessionRouter);
+app.use("/publications",userSessionRouter);
+app.use("/audios/",userAudiosRouter);
+app.use("/shop/",userSessionRouter)
 
 let songsRepository = require("./repositories/songsRepository.js");
 songsRepository.init(app, MongoClient);
