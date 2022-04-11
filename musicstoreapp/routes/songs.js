@@ -24,15 +24,34 @@ module.exports = (app, songsRepository, commentsRepository) => {
         if (req.query.search != null && typeof(req.query.search) != 'undefined' && req.query.search !== '') {
             filter = { 'title' : {$regex : '.*' + req.query.search + '.*'}}
         }
-        songsRepository.getSongs(filter, options).then(songs => {
-            res.render('shop.twig', {songs: songs})
+        let page = parseInt(req.query.page); // Es String !!!
+        if (typeof req.query.page === "undefined" || req.query.page === null || req.query.page === "0") { //Puede no venir el param
+            page = 1;
+        }
+        songsRepository.getSongsPg(filter, options, page).then(result => {
+            let lastPage = result.total / 4;
+            if (result.total % 4 > 0) { // Sobran decimales
+                lastPage = lastPage + 1;
+            }
+            let pages = []; // paginas mostrar
+            for (let i = page - 2; i <= page + 2; i++) {
+                if (i > 0 && i <= lastPage) {
+                    pages.push(i);
+                }
+            }
+            let response = {
+                songs: result.songs,
+                pages: pages,
+                currentPage: page
+            }
+            res.render("shop.twig", response);
         }).catch(error => {
             res.send('Se ha producido un error al listar las canciones ' + error)
         })
     })
     app.get('/add', (req, res) => {
         let response = parseInt(req.query.num1) + parseInt(req.query.num2)
-
+        
         res.send(response)
     })
     app.get('/songs/add', (req, res) => {
@@ -41,10 +60,10 @@ module.exports = (app, songsRepository, commentsRepository) => {
     app.get('/songs/delete/:id', function (req, res) {
         let filter = {_id: ObjectId(req.params.id)};
         commentsRepository.deleteComments({song_id: ObjectId(req.params.id)}, {})
-            .then(r =>{
-
-            }).catch(error => {
-                res.send('Se ha producido un error al eliminar la canción: ' + error)
+        .then(r =>{
+            
+        }).catch(error => {
+            res.send('Se ha producido un error al eliminar la canción: ' + error)
         })
         songsRepository.deleteSong(filter, {}).then(result => {
             if (result == null || result.deletedCount == 0) {
@@ -62,16 +81,16 @@ module.exports = (app, songsRepository, commentsRepository) => {
         songsRepository.findSong(filter, options).then(song => {
             let filterComments = {song_id: ObjectId(req.params.id)}
             commentsRepository.getComments(filterComments, {})
-                .then(comments => {
-                    console.log(req.params.id + ' ' + filterComments.song_id)
-                    let response = {
-                        song: song,
-                        comments : comments
-                    }
-                    res.render('songs/song.twig', response);
-                }).catch(error => {
-                    res.send('Se ha producido un error al buscar los comentarios: ' + error)
-                })
+            .then(comments => {
+                console.log(req.params.id + ' ' + filterComments.song_id)
+                let response = {
+                    song: song,
+                    comments : comments
+                }
+                res.render('songs/song.twig', response);
+            }).catch(error => {
+                res.send('Se ha producido un error al buscar los comentarios: ' + error)
+            })
         }).catch(error => {
             res.send('Se ha producido un error al buscar la canción ' + error)
         });
@@ -80,9 +99,9 @@ module.exports = (app, songsRepository, commentsRepository) => {
         let filter = {author: req.session.user}
         let options = {sort: {title: 1}}
         songsRepository.getSongs(filter, options)
-            .then(songs => {
-                res.render('publications.twig', {songs: songs})
-            }).catch(error => {
+        .then(songs => {
+            res.render('publications.twig', {songs: songs})
+        }).catch(error => {
             res.send('Se ha producido un error al listar las publicaciones del usuario: ' + error)
         })
     })
@@ -157,11 +176,11 @@ module.exports = (app, songsRepository, commentsRepository) => {
     app.get('/songs/edit/:id', (req, res) => {
         let filter = {_id: ObjectId(req.params.id)}
         songsRepository.findSong(filter, {})
-            .then(song => {
-                res.render('songs/edit.twig', {song: song})
-            }).catch(error => {
-                res.send('Se ha producido un error al recuperar la canción: ' + error)
-            })
+        .then(song => {
+            res.render('songs/edit.twig', {song: song})
+        }).catch(error => {
+            res.send('Se ha producido un error al recuperar la canción: ' + error)
+        })
     })
     app.post('/songs/edit/:id', function (req, res) {
         let song = {
