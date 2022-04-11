@@ -78,19 +78,27 @@ module.exports = (app, songsRepository, commentsRepository) => {
     app.get('/songs/:id', (req, res) => {
         let filter = {_id: ObjectId(req.params.id)};
         let options = {};
-        songsRepository.findSong(filter, options).then(song => {
+        let canBuy = true
+        songsRepository.findSong(filter, options).then(async song => {
             let filterComments = {song_id: ObjectId(req.params.id)}
-            commentsRepository.getComments(filterComments, {})
-            .then(comments => {
-                console.log(req.params.id + ' ' + filterComments.song_id)
-                let response = {
-                    song: song,
-                    comments : comments
-                }
-                res.render('songs/song.twig', response);
-            }).catch(error => {
-                res.send('Se ha producido un error al buscar los comentarios: ' + error)
-            })
+            if (song.author === req.session.user) {
+                console.log("author")
+                canBuy = false
+            }
+            let filter = {user: req.session.user, songId: song._id};
+            let purchases = await songsRepository.getPurchases(filter, options)
+                .catch(error => {res.send("Se ha producido un error al buscar la canción" + error)});
+            if (purchases.length !== 0) {
+                canBuy = false
+            }
+            let comments = await commentsRepository.getComments(filterComments, {})
+                .catch(error => res.send('Se ha producido un error al buscar los comentarios: ' + error))
+            let response = {
+                song: song,
+                comments : comments,
+                canBuy : canBuy
+            }
+            res.render('songs/song.twig', response);
         }).catch(error => {
             res.send('Se ha producido un error al buscar la canción ' + error)
         });
