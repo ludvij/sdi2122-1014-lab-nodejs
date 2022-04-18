@@ -8,10 +8,13 @@ const {MongoClient} = require('mongodb')
 const crypto = require('crypto')
 const fileUpload = require('express-fileupload')
 const expressSession = require('express-session')
+const jwt = require('jsonwebtoken')
 
 const indexRouter = require('./routes/index');
 const userSessionRouter = require('./routes/userSessionRouter')
 const userAudiosRouter = require('./routes/userAudiosRouter')
+const userAuthorRouter = require('./routes/userAuthorRouter')
+const userTokenRouter = require('./routes/userTokenRouter');
 
 let songsRepository = require('./repositories/songsRepository.js');
 let usersRepository = require('./repositories/usersRepository.js');
@@ -32,6 +35,7 @@ app.use(fileUpload({
 app.set('uploadPath', __dirname)
 app.set('clave', 'abcdefg')
 app.set('crypto', crypto)
+app.set('jwt', jwt)
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
@@ -52,9 +56,9 @@ app.use('/shop/',userSessionRouter)
 app.use('/comments/', userSessionRouter)
 app.use('/favorites', userSessionRouter)
 app.use('/favorites/**', userSessionRouter)
-const userAuthorRouter = require('./routes/userAuthorRouter')
 app.use("/songs/edit",userAuthorRouter)
 app.use("/songs/delete",userAuthorRouter)
+app.use("/api/v1.0/songs/", userTokenRouter);
 
 songsRepository.init(app, MongoClient);
 usersRepository.init(app, MongoClient);
@@ -65,7 +69,8 @@ require('./routes/comments.js')(app, commentsRepository)
 require('./routes/favorites')(app, songsRepository)
 require('./routes/users.js')(app, usersRepository);
 require('./routes/authors.js')(app)
-require("./routes/api/songsAPIv1.0.js")(app, songsRepository);
+require("./routes/api/songsAPIv1.0.js")(app, songsRepository, usersRepository);
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
