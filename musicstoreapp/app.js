@@ -65,7 +65,7 @@ require('./routes/comments.js')(app, commentsRepository)
 require('./routes/favorites')(app, songsRepository)
 require('./routes/users.js')(app, usersRepository);
 require('./routes/authors.js')(app)
-
+require("./routes/api/songsAPIv1.0.js")(app, songsRepository);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
