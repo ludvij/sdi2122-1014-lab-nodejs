@@ -9,6 +9,7 @@ const crypto = require('crypto')
 const fileUpload = require('express-fileupload')
 const expressSession = require('express-session')
 const jwt = require('jsonwebtoken')
+const rest = require('request')
 
 const indexRouter = require('./routes/index');
 const userSessionRouter = require('./routes/userSessionRouter')
@@ -47,6 +48,7 @@ app.set('uploadPath', __dirname)
 app.set('clave', 'abcdefg')
 app.set('crypto', crypto)
 app.set('jwt', jwt)
+app.set('rest', rest)
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
