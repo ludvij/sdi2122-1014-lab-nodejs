@@ -2,6 +2,9 @@
   "name": "tienda_musica",
   "description": "Tienda de música",
   "version": "1.0.0",
+  "scripts": {
+    "start": "nodemon ./hello-world-server.js -e twig,js,json,html"
+  },
   "dependencies": {
     "express": "^4.17.1"
   }
