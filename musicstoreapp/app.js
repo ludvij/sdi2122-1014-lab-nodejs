@@ -14,13 +14,24 @@ const indexRouter = require('./routes/index');
 const userSessionRouter = require('./routes/userSessionRouter')
 const userAudiosRouter = require('./routes/userAudiosRouter')
 const userAuthorRouter = require('./routes/userAuthorRouter')
+
 const userTokenRouter = require('./routes/userTokenRouter');
+const songAuthorRouter = require('./routes/songAuthorRouter');
 
 let songsRepository = require('./repositories/songsRepository.js');
 let usersRepository = require('./repositories/usersRepository.js');
 let commentsRepository = require('./repositories/commentsRepository.js')
 
 const app = express();
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "POST, GET, DELETE, UPDATE, PUT");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type,Accept, token");
+  // Debemos especificar todas las headers que se aceptan. Content-Type , token
+  next();
+})
 
 app.use(expressSession({
   secret: 'abcdefg',
@@ -58,7 +69,6 @@ app.use('/favorites', userSessionRouter)
 app.use('/favorites/**', userSessionRouter)
 app.use("/songs/edit",userAuthorRouter)
 app.use("/songs/delete",userAuthorRouter)
-app.use("/api/v1.0/songs/", userTokenRouter);
 
 songsRepository.init(app, MongoClient);
 usersRepository.init(app, MongoClient);
@@ -69,6 +79,11 @@ require('./routes/comments.js')(app, commentsRepository)
 require('./routes/favorites')(app, songsRepository)
 require('./routes/users.js')(app, usersRepository);
 require('./routes/authors.js')(app)
+
+app.use("/api/v1.0/songs/", userTokenRouter);
+app.use('/api/v1.0/songs/:id', songAuthorRouter)
+
+
 require("./routes/api/songsAPIv1.0.js")(app, songsRepository, usersRepository);
 
 

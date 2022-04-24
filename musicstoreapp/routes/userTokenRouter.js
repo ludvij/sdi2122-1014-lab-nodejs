@@ -7,7 +7,7 @@ userTokenRouter.use(function (req, res, next) {
     if (token != null) {
         // verificar el token
         jwt.verify(token, 'secreto', {}, function (err, infoToken) {
-            if (err || (Date.now() / 1000 - infoToken.time) > 240) {
+            if (err || (Date.now() / 1000 - infoToken.time) > 480) {
                 res.status(403); // Forbidden
                 res.json({
                     authorized: false,
@@ -15,7 +15,7 @@ userTokenRouter.use(function (req, res, next) {
                 });
             } else {
                 // dejamos correr la petición
-                res.user = infoToken.user;
+                req.user = infoToken.user;
                 next();
             }
         });

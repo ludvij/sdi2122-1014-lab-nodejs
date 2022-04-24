@@ -62,7 +62,7 @@ module.exports = function (app, songsRepository, usersRepository) {
                 title: req.body.title,
                 kind: req.body.kind,
                 price: req.body.price,
-                author: req.session.user
+                author: req.user
             }
             // Validar aquí: título, género, precio y autor.
             songsRepository.insertSong(song, function (songId) {
@@ -89,7 +89,7 @@ module.exports = function (app, songsRepository, usersRepository) {
             //Si la _id NO no existe, no crea un nuevo documento.
             const options = {upsert: false};
             let song = {
-                author: req.session.user
+                author: req.user
             }
             if (typeof req.body.title != "undefined" && req.body.title != null)
                 song.title = req.body.title;
@@ -103,7 +103,7 @@ module.exports = function (app, songsRepository, usersRepository) {
                     res.json({error: "ID inválido o no existe, no se ha actualizado la canción."});
                 }
                 //La _id No existe o los datos enviados no difieren de los ya almacenados.
-                else if (result.modifiedCount == 0) {
+                else if (result.modifiedCount === 0) {
                     res.status(409);
                     res.json({error: "No se ha modificado ninguna canción."});
                 }
